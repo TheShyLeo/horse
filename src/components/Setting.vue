@@ -1,5 +1,7 @@
 <template>
-	<div width="200px" class="Setting">123123123</div>
+	<el-main class="Setting">
+		123123123
+	</el-main>
 </template>
 
 <script>

@@ -11,7 +11,8 @@ const ipcRenderer = electron.ipcRenderer
 JSON.handle = function (data) {
   return JSON.parse(JSON.stringify(data))
 }
-
+import Api from './api/index';
+Vue.api = Vue.prototype.$Api = Api; //请求接口
 // 引入electron接口
 Vue.path = Vue.prototype.$path = path // path接口
 Vue.electron = Vue.prototype.$electron = electron // electron

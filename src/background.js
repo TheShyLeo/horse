@@ -20,6 +20,7 @@ async function createWindow () {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: true,
+      enableRemoteModule: true,// 开启远程模块 这个配置了之后就可以使用require('electron').remote
       contextIsolation: false
     }
   })
