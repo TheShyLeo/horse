@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+const routerPush = Router.prototype.push;
+Router.prototype.push = function push(location) {
+	return routerPush.call(this, location).catch(error => error);
+};
 
 Vue.use(Router)
 
@@ -9,15 +12,20 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: require('./views/Home.vue').default,
+      redirect: '/prophet',
+      children: [
+				{
+					path: '/prophet',
+					name: 'prophet',
+					component: require('./components/Prophet.vue').default
+				},
+        {
+					path: '/setting',
+					name: 'setting',
+					component: require('./components/Setting.vue').default
+				},
+      ]
     }
   ]
 })

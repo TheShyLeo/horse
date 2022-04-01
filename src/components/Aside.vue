@@ -8,14 +8,23 @@
 			</div>
 		</div>
 		<div class="lv-left-menu">
-			<div class="lv-left-menu-container">
-				<ul>
-					<li v-for="(item, index) in MenuData" :key="index" ripple="" :class="item.active" @click="change(index)">
-						<span class="sf-icon-play-1" v-if="index > 1 && item.icon === 'sf-icon-bars'" />
-						<i :class="item.icon" />{{ item.name }}
-					</li>
-				</ul>
-			</div>
+			<el-menu
+				default-active="prophet"
+				class="el-menu-vertical-demo"
+				@select="handleSelect"
+				background-color="transparent"
+				text-color="#000000"
+				active-text-color="#ffd04b"
+			>
+				<el-menu-item index="prophet">
+					<i class="el-icon-menu"></i>
+					<span slot="title">知己知彼</span>
+				</el-menu-item>
+				<el-menu-item index="setting">
+					<i class="el-icon-setting"></i>
+					<span slot="title">游戏设置</span>
+				</el-menu-item>
+			</el-menu>
 		</div>
 	</el-aside>
 </template>
@@ -27,24 +36,15 @@ export default {
 			user: {
 				name: '喜乐难寻',
 				rank: 'Lv.1',
-			},
-			MenuData: [
-				{
-					name: '知己知彼',
-					icon: 'sf-icon-globe',
-					data: '/discover',
-					active: 'active',
-				},
-				{
-					name: '游戏设置',
-					icon: 'sf-icon-tv',
-					data: '/local',
-					active: '',
-				}
-			],
+			}
 		};
 	},
-
+	methods: {
+		handleSelect(index) {
+			console.log(index);
+			this.$router.push('/'+index);
+		}
+	},
 	name: 'Aside',
 };
 </script>
@@ -65,8 +65,11 @@ export default {
 	color: #b3b3b3;
 	padding: 0px 10px 10px 10px;
 }
-.lv-left-menu-container {
-	padding: 10px 0;
-	border-bottom: 1px solid #ebeef5;
+.lv-left-menu {
+	margin: 20px;
+	-webkit-app-region: no-drag;
+}
+.el-menu {
+	border-right: 0px!important;
 }
 </style>
