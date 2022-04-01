@@ -21,7 +21,7 @@
 		</el-aside>
 		<el-main>
 			<el-table :data="tableData" style="width: 100%">
-				<el-table-column label="姓名" width="80">
+				<el-table-column label="昵称" width="80" align="center">
 					<template slot-scope="scope">
 						<el-popover trigger="hover" placement="top">
 							<p>姓名: {{ scope.row.name }}</p>
@@ -32,10 +32,10 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="胜率" width="180" prop="percent"> </el-table-column>
-				<el-table-column label="战绩">
+				<el-table-column label="战绩" align="center">
 					<template slot-scope="scope">
 						<div slot="reference" class="history">
-							<el-tag :key="index" v-for="(tag, index) in scope.row.history" size="medium" :type="tag.type" style="margin-left: 10px">
+							<el-tag :key="index" v-for="(tag, index) in scope.row.history" size="medium" effect="light" :type="tag.type" style="margin-left: 10px;font-weight: bold;">
 								{{ tag.name }}
 							</el-tag>
 						</div>
@@ -48,8 +48,12 @@
 
 <script>
 // @ is an alias to /src
+import Aside from '@/components/Aside.vue';
 
 export default {
+	components: {
+		// Aside
+	},
 	data() {
 		return {
 			MenuData: [
@@ -145,23 +149,13 @@ export default {
 	position: absolute;
 	background: url('../assets/016.png');
 }
-.Aside {
-	background: #ebeef5;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+.el-table, .el-table__expanded-cell{
+    background-color: transparent!important;
 }
-.lv-left-head-name {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-.lv-left-head-name span {
-	font-size: 16px;
-	color: #b3b3b3;
-	padding: 0px 10px 10px 10px;
-}
-.lv-left-menu-container {
-	padding: 10px 0;
-	border-bottom: 1px solid #ebeef5;
+/* 表格内背景颜色 */
+.el-table th,
+.el-table tr,
+.el-table td {
+    background-color: transparent!important;
 }
 </style>
