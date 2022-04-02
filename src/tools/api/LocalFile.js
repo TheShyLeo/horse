@@ -1,13 +1,11 @@
 // import electron from 'electron'
 import fs from 'fs'
 const productName = 'horse'
-const { app,remote } = require('electron')
-console.log(process.type)
+const { app, remote } = require('electron')
 let APP = process.type === 'renderer' ? remote.app : app
-console.log(APP)
 let STORE_PATH = APP.getPath('userData')
 export default {
-  address:  '/horse/',
+  address: STORE_PATH + '/',
   user: '',
   debug: process.env.NODE_ENV === 'development',
   folders: {},
@@ -29,17 +27,13 @@ export default {
     this.folderVerify(this.address, () => {
       this.folders = {
         basic: this.address + productName,
-        user: this.address + productName + '/' + user
+        // user: this.address + productName + '/' + user
       }
       this.files = {
-        login: this.folders.basic,
-        user: this.folders.user,
-        download: this.folders.user,
-        setting: this.folders.user,
-        'local-music': this.folders.basic,
-        key: this.folders.basic,
+        setting: this.folders.basic,
         __map__: this.folders.basic
       }
+      console.log(this.address)
       let foldersMap = []
       let i = 0
       for (let folder in this.folders) {
@@ -107,11 +101,8 @@ export default {
   },
   write(type, data, callback) {
     this.log('写入' + this.files[type])
+    console.log('data: ', data);
     data = JSON.stringify(data)
-    if (type === 'key') {
-      let char26 = this.char26()
-      data = encrypt.encode(data, data + char26, data + char26)
-    }
     fs.writeFile(this.files[type], data, err => {
       callback && callback(data, err)
     })

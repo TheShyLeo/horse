@@ -1,9 +1,9 @@
 <template>
 	<el-container class="home">
 		<Aside/>
-		<el-main>
+		<!-- <el-main> -->
 			<router-view></router-view>
-		</el-main>
+		<!-- </el-main> -->
 	</el-container>
 </template>
 
