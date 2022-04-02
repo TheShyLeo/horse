@@ -8,6 +8,19 @@
 				<div>自动办选英雄<el-switch v-model="setting.autoBanPick" @change="change"></el-switch></div>
 			</el-col>
 		</el-row>
+		<el-row>
+			<el-col :span="12">
+				<div>
+					ban
+					<el-select v-model="setting.ban" style="width: 200px" filterable clearable @change="change">
+						<el-option v-for="item in champions" :key="item.id" :label="item.name" :value="item.id">
+							<img src="../assets/123.png" style="height: 32px; float: right" />
+							<span>{{ item.name }}</span>
+						</el-option>
+					</el-select>
+				</div>
+			</el-col>
+		</el-row>
 	</el-main>
 </template>
 
@@ -16,6 +29,7 @@ export default {
 	name: 'Setting',
 	data() {
 		return {
+			champions: [],
 			setting: {
 				autoAccept: false,
 				autoBanPick: false,
@@ -73,8 +87,7 @@ export default {
 /* .el-col {
 	padding: 20px;
 } */
-.el-switch{
+.el-switch {
 	padding: 50px;
 }
-
 </style>
