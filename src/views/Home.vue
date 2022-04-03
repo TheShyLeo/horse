@@ -37,58 +37,6 @@ export default {
 					active: '',
 				},
 			],
-			tableData: [
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: '' },
-						{ name: '1/10/2', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-			],
 			user: {
 				name: '喜乐难寻',
 				rank: 'Lv.1',

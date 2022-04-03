@@ -4,7 +4,10 @@ import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import LocalFile from './tools/api/LocalFile'
+import lcu from './tools/api/lcu'
+import { request, connect, authenticate } from 'league-connect';
 const isDevelopment = process.env.NODE_ENV !== 'production'
+let auth = {};
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -66,6 +69,10 @@ app.on('ready', async () => {
   }
   LocalFile.init()
   createWindow()
+  let credentials = await authenticate({ awaitConnection: true})
+  console.log('craa: ', credentials.port);
+  auth.port = credentials.port
+  auth.password = credentials.password
 })
 
 // Exit cleanly on request from parent process in development mode.

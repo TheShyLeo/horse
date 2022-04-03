@@ -33,6 +33,8 @@
 </template>
 
 <script>
+// import lcu from '../tools/api/lcu';
+
 export default {
 	data() {
 		return {
@@ -89,6 +91,8 @@ export default {
 				},
 			],
 		};
+	},
+	created() {
 	},
 	name: 'Prophet',
 };
