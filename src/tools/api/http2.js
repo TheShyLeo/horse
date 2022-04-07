@@ -1,6 +1,10 @@
 import http2 from 'http2'
+const https = require('https');
+const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+});
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-export default async function requestHttp2(options,credentials) {
+async function requestHttp2(options, credentials) {
     let method = options.method || 'GET';
     let url = options.url;
     let port = credentials.port;
@@ -29,4 +33,24 @@ export default async function requestHttp2(options,credentials) {
             client.close();
         });
     })
+}
+async function req(options, credentials) {
+    let baseUrl = `https://riot:${credentials.password}@127.0.0.1:${credentials.port}`
+    let url = baseUrl + options.url;
+    const hasBody = options.method !== 'GET' && options.body !== undefined;
+    let res = await fetch(url, {
+        method: options.method,
+        body: hasBody ? JSON.stringify(options.body) : undefined,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Basic ' + Buffer.from(`riot:${credentials.password}`).toString('base64')
+        },
+        agent: httpsAgent
+    });
+    return res;
+}
+export default {
+    requestHttp2,
+    req
 }

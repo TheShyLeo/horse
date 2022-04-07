@@ -4,9 +4,11 @@ import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import LocalFile from './tools/api/LocalFile'
+import { request, connect, authenticate } from 'league-connect'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 let credentials = {};
 
+app.commandLine.appendSwitch('ignore-certificate-errors')
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
     { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -46,7 +48,9 @@ async function createWindow() {
             },
         });
     });
-
+    let t1 = new Date().getTime()
+    credentials = await authenticate({ awaitConnection: true });
+    console.log(new Date().getTime() - t1)
     let webContents = win.webContents;
     webContents.on('did-finish-load', () => {
         console.log('did-finish-load')
@@ -54,7 +58,7 @@ async function createWindow() {
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
-        // Load the url of the dev server if in development mode
+        // Load the url of the dev server if in development mode  
         await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
         if (!process.env.IS_TEST) win.webContents.openDevTools()
     } else {
@@ -91,20 +95,11 @@ app.on('ready', async () => {
             console.error('Vue Devtools failed to install:', e.toString())
         }
     }
-    LocalFile.init()
-    console.log('ready createWindow====')
     createWindow()
-    console.log('sleep')
-    // let credentials = await authenticate({ awaitConnection: true})
-    // console.log('craa: ', credentials.port);
-    // auth.port = credentials.port
-    // auth.password = credentials.password
-    console.log('sleep did')
-    credentials.port = '9000'
-    credentials.password = '123456'
+    LocalFile.init()
 })
 
-// Exit cleanly on request from parent process in development mode.
+// Exit cleanly on request from parent process in development mode.              
 if (isDevelopment) {
     if (process.platform === 'win32') {
         process.on('message', (data) => {

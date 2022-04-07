@@ -30,31 +30,37 @@
 </template>
 
 <script>
+import client from '../tools/api/client';
 export default {
-	props : {
-		credentials : Object
+	props: {
+		credentials: Object,
 	},
 	data() {
 		return {
 			user: {
 				name: '喜乐难寻',
 				rank: 'Lv.1',
-			}
+			},
 		};
 	},
 	methods: {
 		handleSelect(index) {
-			this.$router.push('/'+index);
-		}
-	},
-	watch: {
-		credentials: function (val) {
-			this.credentials = val;// 接收父组件的值
-			console.log('credentials watch: ', this.credentials);
+			this.$router.push('/' + index);
 		},
 	},
+	watch: {
+		credentials: async function (val) {
+			this.credentials = val;// 接收父组件的值
+			console.log('credentials watch: ', this.credentials);
+			let Client = new client(this.credentials);
+			let c = await Client.getCurSummoner();
+			console.log('c: ', c);
+		}
+	},
 	created() {
-		
+	},
+	mounted() {
+		console.log('credentials mounted: ', this.credentials);
 	},
 	name: 'Aside',
 };
@@ -81,6 +87,6 @@ export default {
 	-webkit-app-region: no-drag;
 }
 .el-menu {
-	border-right: 0px!important;
+	border-right: 0px !important;
 }
 </style>
