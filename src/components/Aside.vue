@@ -31,6 +31,9 @@
 
 <script>
 export default {
+	props : {
+		credentials : Object
+	},
 	data() {
 		return {
 			user: {
@@ -43,6 +46,15 @@ export default {
 		handleSelect(index) {
 			this.$router.push('/'+index);
 		}
+	},
+	watch: {
+		credentials: function (val) {
+			this.credentials = val;// 接收父组件的值
+			console.log('credentials watch: ', this.credentials);
+		},
+	},
+	created() {
+		
 	},
 	name: 'Aside',
 };

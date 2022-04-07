@@ -34,9 +34,11 @@
 
 <script>
 // import lcu from '../tools/api/lcu';
-import fetch from 'node-fetch';
 
 export default {
+	props : {
+		credentials : Object
+	},
 	data() {
 		return {
 			tableData: [
@@ -90,10 +92,23 @@ export default {
 						{ name: '1/10/2', type: 'danger' },
 					],
 				},
-			],
+			]
 		};
 	},
+	watch: {
+		credentials: function (val) {
+			this.credentials = val;// 接收父组件的值
+			console.log('credentials1: ', this.credentials);
+		},
+	},
+	methods: {
+		// 查询
+		search() {
+			
+		}
+	},
 	async created() {
+
 	},
 	name: 'Prophet',
 };
@@ -112,6 +127,6 @@ export default {
 	border: 0px !important;
 }
 .el-table::before {
-    height: 0px !important;
+	height: 0px !important;
 }
 </style>

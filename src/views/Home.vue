@@ -1,8 +1,8 @@
 <template>
 	<el-container class="home">
-		<Aside/>
+		<Aside :credentials="credentials"/>
 		<!-- <el-main> -->
-			<router-view></router-view>
+			<router-view :credentials="credentials"></router-view>
 		<!-- </el-main> -->
 	</el-container>
 </template>
@@ -17,16 +17,15 @@ export default {
 	},
 	data() {
 		return {
-			auth:{}
+			credentials:{}
 		};
 	},
 	methods : {
-		
+
 	},
 	async beforeCreate() {
 		this.$ipc.on('auth', (event, data) => {
-			this.auth = data;
-			console.log(data);
+			this.credentials = data;
 		});
 	},
 	name: 'home',
