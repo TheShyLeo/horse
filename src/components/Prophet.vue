@@ -104,11 +104,23 @@ export default {
 	methods: {
 		// 查询
 		search() {
-			
+			let data ;
+			let arr = [];
+			if(data){
+				if(data.games && data.games.games && data.games.games.length > 0){
+					data.games.games.forEach(item => {
+						let match = {};
+						let participants = item.participants;
+						let stats = participants.stats;
+						match.gameId = item.gameId;
+						arr.push(item);
+					});
+				}
+			}
 		}
 	},
 	async created() {
-
+		
 	},
 	name: 'Prophet',
 };
