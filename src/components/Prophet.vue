@@ -34,6 +34,7 @@
 
 <script>
 // import lcu from '../tools/api/lcu';
+import fetch from 'node-fetch';
 
 export default {
 	data() {
@@ -92,7 +93,7 @@ export default {
 			],
 		};
 	},
-	created() {
+	async created() {
 	},
 	name: 'Prophet',
 };

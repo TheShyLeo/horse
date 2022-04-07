@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow,ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import LocalFile from './tools/api/LocalFile'
@@ -13,6 +13,10 @@ let auth = {};
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+async function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}
 
 async function createWindow () {
   // Create the browser window.
@@ -28,6 +32,28 @@ async function createWindow () {
       contextIsolation: false
     }
   })
+
+  //解决跨域
+  win.webContents.session.webRequest.onBeforeSendHeaders(
+    (details, callback) => {
+      callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+    },
+  );
+
+  win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        ...details.responseHeaders,
+      },
+    });
+  });
+  
+  let webContents = win.webContents;
+  webContents.on('did-finish-load', () => {
+    console.log('did-finish-load')
+    webContents.send('auth', auth);
+})
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -68,11 +94,17 @@ app.on('ready', async () => {
     }
   }
   LocalFile.init()
+  console.log('ready createWindow====')
   createWindow()
-  let credentials = await authenticate({ awaitConnection: true})
-  console.log('craa: ', credentials.port);
-  auth.port = credentials.port
-  auth.password = credentials.password
+  console.log('sleep')
+  // let credentials = await authenticate({ awaitConnection: true})
+  // console.log('craa: ', credentials.port);
+  // auth.port = credentials.port
+  // auth.password = credentials.password
+  await sleep(2200);
+  console.log('sleep did')
+  auth.port = '9000'
+  auth.password = '123456'
 })
 
 // Exit cleanly on request from parent process in development mode.

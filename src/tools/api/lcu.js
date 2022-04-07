@@ -1,6 +1,6 @@
-const _ = require('lodash')
-const http2 = require('http2')
-const { request, connect, authenticate } = require('league-connect')
+import _ from 'lodash'
+import http2 from 'http2'
+import { request, connect, authenticate } from 'league-connect'
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 async function sleep(time) {

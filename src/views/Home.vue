@@ -10,7 +10,6 @@
 <script>
 // @ is an alias to /src
 import Aside from '@/components/Aside.vue';
-import Prophet from '@/components/Prophet.vue';
 
 export default {
 	components: {
@@ -18,30 +17,17 @@ export default {
 	},
 	data() {
 		return {
-			MenuData: [
-				{
-					name: '知己知彼',
-					icon: 'sf-icon-globe',
-					data: '/discover',
-					active: 'active',
-				},
-				{
-					name: '游戏设置',
-					icon: 'sf-icon-tv',
-					data: '/local',
-					active: '',
-				},
-				{
-					name: '我喜欢的音乐',
-					icon: 'sf-icon-heart-o',
-					active: '',
-				},
-			],
-			user: {
-				name: '喜乐难寻',
-				rank: 'Lv.1',
-			},
+			auth:{}
 		};
+	},
+	methods : {
+		
+	},
+	async beforeCreate() {
+		this.$ipc.on('auth', (event, data) => {
+			this.auth = data;
+			console.log(data);
+		});
 	},
 	name: 'home',
 };
