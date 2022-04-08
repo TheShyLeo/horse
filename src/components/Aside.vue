@@ -53,7 +53,7 @@ export default {
 			this.credentials = val;// 接收父组件的值
 			console.log('credentials watch: ', this.credentials);
 			let Client = new client(this.credentials);
-			let c = await Client.getCurSummoner();
+			let c = await Client.getCur();
 			console.log('c: ', c);
 		}
 	},

@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 async function req(options, credentials) {
     console.log('2222222222', credentials);
-    let baseUrl = `https://127.0.0.1:${credentials.port}`
+    let baseUrl = `http://127.0.0.1:${credentials.port}`
     let url = baseUrl + options.url;
     const hasBody = options.method !== 'GET' && options.body !== undefined;
     const httpsAgent = new https.Agent({
@@ -14,7 +14,6 @@ async function req(options, credentials) {
     try {
         let res = await fetch(url, {
             method: options.method,
-            mode: 'no-cors',
             body: hasBody ? JSON.stringify(options.body) : undefined,
             headers: {
                 Accept: 'application/json',
@@ -23,7 +22,6 @@ async function req(options, credentials) {
             },
             agent: httpsAgent
         });
-        console.log(res)
         return res;
     } catch (error) {
         console.log(error)
@@ -36,17 +34,31 @@ export default class client {
     async getWs() {
         return await connect(this.credentials);
     }
-    // async getC() {
-    //     let response = await fetch({
-    //         method: 'GET',
-    //         url: `http://httpbin.org/get`
-    //     });
-    //     if (response.ok) {
-    //         let messages = await response.text();
-    //         return messages;
-    //     }
-    //     return [];
-    // }
+    async getC() {
+        let response = await fetch({
+            method: 'GET',
+            url: `http://httpbin.org/get`
+        });
+        if (response.ok) {
+            let messages = await response.text();
+            return messages;
+        }
+        return [];
+    }
+
+    async getCur() {
+        console.log('ccccccccccc', this.credentials);
+        let response = await req({
+            method: 'GET',
+            url: '/test'
+        }, this.credentials);
+
+        if (response.ok) {
+            let summoner = await response.text();
+            return summoner;
+        }
+        return {};
+    }
 
     async getConversationMessages(conversationId) {
         let response = await request({

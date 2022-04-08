@@ -6,9 +6,12 @@ import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import LocalFile from './tools/api/LocalFile'
 import { request, connect, authenticate } from 'league-connect'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-let credentials = {};
+let credentials = {
+    port: 10008,
+    password: '123456'
+};
 
-app.commandLine.appendSwitch('ignore-certificate-errors')
+// app.commandLine.appendSwitch('ignore-certificate-errors')
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
     { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -33,24 +36,31 @@ async function createWindow() {
         }
     })
 
+    const filter = {
+        urls: ['*://127.0.0.1:*/*']
+    }
+
     //解决跨域
-    win.webContents.session.webRequest.onBeforeSendHeaders(
+    win.webContents.session.webRequest.onBeforeSendHeaders(filter,
         (details, callback) => {
-            callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+            details.requestHeaders['Origin'] = '*'
+            details.requestHeaders['Authorization'] = 'Basic ' + Buffer.from(`riot:${credentials.password}`).toString('base64')
+            callback({ requestHeaders: { ...details.requestHeaders } });
         },
     );
 
-    win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    win.webContents.session.webRequest.onHeadersReceived(filter,(details, callback) => {
+        details.responseHeaders['Access-Control-Allow-Origin'] = '*',
+        details.responseHeaders['Access-Control-Allow-Headers'] = '*',
         callback({
             responseHeaders: {
-                'Access-Control-Allow-Origin': ['*'],
                 ...details.responseHeaders,
             },
         });
     });
-    let t1 = new Date().getTime()
-    credentials = await authenticate({ awaitConnection: true });
-    console.log(new Date().getTime() - t1)
+    // let t1 = new Date().getTime()
+    // credentials = await authenticate({ awaitConnection: true });
+    // console.log(new Date().getTime() - t1)
     let webContents = win.webContents;
     webContents.on('did-finish-load', () => {
         console.log('did-finish-load')
@@ -58,7 +68,7 @@ async function createWindow() {
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
-        // Load the url of the dev server if in development mode  
+        // Load the url of the dev server if in development mode    
         await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
         if (!process.env.IS_TEST) win.webContents.openDevTools()
     } else {
