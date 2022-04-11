@@ -9,14 +9,14 @@
 		</div>
 		<div class="lv-left-menu">
 			<el-menu
-				default-active="prophet"
+				default-active="Prophets"
 				class="el-menu-vertical-demo"
 				@select="handleSelect"
 				background-color="transparent"
 				text-color="#000000"
 				active-text-color="#ffd04b"
 			>
-				<el-menu-item index="prophet">
+				<el-menu-item index="Prophets">
 					<i class="el-icon-menu"></i>
 					<span slot="title">知己知彼</span>
 				</el-menu-item>

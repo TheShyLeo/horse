@@ -13,12 +13,12 @@ export default new Router({
             path: '/',
             name: 'home',
             component: require('./views/Home.vue').default,
-            redirect: '/prophet',
+            redirect: '/Prophets',
             children: [
                 {
-                    path: '/prophet',
-                    name: 'prophet',
-                    component: require('./components/Prophet.vue').default
+                    path: '/Prophets',
+                    name: 'Prophets',
+                    component: require('./components/Prophets.vue').default
                 },
                 {
                     path: '/setting',
