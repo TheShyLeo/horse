@@ -112,8 +112,15 @@ export default {
 						let match = {};
 						let participants = item.participants;
 						let stats = participants.stats;
-						match.gameId = item.gameId;
-						arr.push(item);
+						match.championId = participants.championId;
+						match.gameId = stats.gameId;
+						match.kills = stats.kills;
+						match.deaths = stats.deaths;
+						match.assists = stats.assists;
+						match.win = stats.win;
+						match.earlySurrender = stats.causedEarlySurrender;
+						match.kda = match.kills + '/' + match.deaths + '/' + match.assists;
+						arr.push(match);
 					});
 				}
 			}
