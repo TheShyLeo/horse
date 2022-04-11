@@ -1,7 +1,7 @@
 <template>
 	<el-aside width="200px" class="Aside">
 		<div class="lv-left-head">
-			<img src="../assets/123.png" alt="icon" width="42" height="42" style="border-radius: 50%; vertical-align: middle; margin: 10px 50px" />
+			<img :src="user.icon" alt="icon" width="42" height="42" style="border-radius: 50%; vertical-align: middle; margin: 10px 50px" />
 			<div class="lv-left-head-name">
 				<span>{{ user.name }}</span>
 				<span>{{ user.rank }}</span>
@@ -40,6 +40,7 @@ export default {
 			user: {
 				name: '喜乐难寻',
 				rank: 'Lv.1',
+				icon: '../assets/123.png'
 			},
 		};
 	},
@@ -47,6 +48,14 @@ export default {
 		handleSelect(index) {
 			this.$router.push('/' + index);
 		},
+		getCurrentSummoner(){
+			let data ={};
+			if(data){
+				this.name = data.displayName;
+				this.rank = data.summonerLevel;
+				this.icon = data.profileIconId;
+			}
+		}
 	},
 	watch: {
 		credentials: async function (val) {
