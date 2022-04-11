@@ -21,6 +21,12 @@ async function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time))
 }
 
+async function listenCredentials(){
+    let t1 = new Date().getTime()
+    credentials = await authenticate({ awaitConnection: true });
+    console.log(new Date().getTime() - t1)
+}
+
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
@@ -58,13 +64,13 @@ async function createWindow() {
             },
         });
     });
-    // let t1 = new Date().getTime()
-    // credentials = await authenticate({ awaitConnection: true });
-    // console.log(new Date().getTime() - t1)
+    listenCredentials();
     let webContents = win.webContents;
     webContents.on('did-finish-load', () => {
         console.log('did-finish-load')
-        webContents.send('auth', credentials);
+        if(Object.keys(credentials).length>0){
+            webContents.send('auth', credentials);
+        }
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
