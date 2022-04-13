@@ -4,13 +4,13 @@ const https = require('https');
 import fetch from 'node-fetch'
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 async function req(options, credentials) {
-    console.log('2222222222', credentials);
-    let baseUrl = `http://127.0.0.1:${credentials.port}`
+    let baseUrl = `https://127.0.0.1:${credentials.port}`
     let url = baseUrl + options.url;
     const hasBody = options.method !== 'GET' && options.body !== undefined;
     const httpsAgent = new https.Agent({
         rejectUnauthorized: false,
     });
+    console.log('options', options);
     try {
         let res = await fetch(url, {
             method: options.method,
@@ -34,31 +34,19 @@ export default class client {
     async getWs() {
         return await connect(this.credentials);
     }
-    async getC() {
-        let response = await fetch({
-            method: 'GET',
-            url: `http://httpbin.org/get`
-        });
-        if (response.ok) {
-            let messages = await response.text();
-            return messages;
-        }
-        return [];
-    }
+    // async getCur() {
+    //     console.log('ccccccccccc', this.credentials);
+    //     let response = await req({
+    //         method: 'GET',
+    //         url: '/test'
+    //     }, this.credentials);
 
-    async getCur() {
-        console.log('ccccccccccc', this.credentials);
-        let response = await req({
-            method: 'GET',
-            url: '/test'
-        }, this.credentials);
-
-        if (response.ok) {
-            let summoner = await response.text();
-            return summoner;
-        }
-        return {};
-    }
+    //     if (response.ok) {
+    //         let summoner = await response.text();
+    //         return summoner;
+    //     }
+    //     return {};
+    // }
 
     async getConversationMessages(conversationId) {
         let response = await request({
@@ -82,8 +70,7 @@ export default class client {
         }
         return [];
     }
-    async getCurSummoner() {
-        console.log('11111111111', this.credentials);
+    async getCurrentSummoner() {
         let response = await req({
             method: 'GET',
             url: '/lol-summoner/v1/current-summoner'
@@ -93,7 +80,7 @@ export default class client {
             let summoner = await response.json();
             return summoner;
         }
-        return {};
+        return null;
     }
     async getMatchList(accountId, begIndex, endIndex) {
         let response = await requestHttp2({

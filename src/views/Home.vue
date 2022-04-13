@@ -1,8 +1,8 @@
 <template>
 	<el-container class="home">
-		<Aside :credentials="credentials"/>
+		<Aside />
 		<!-- <el-main> -->
-			<router-view :credentials="credentials"></router-view>
+		<router-view></router-view>
 		<!-- </el-main> -->
 	</el-container>
 </template>
@@ -13,16 +13,14 @@ import Aside from '@/components/Aside.vue';
 
 export default {
 	components: {
-		Aside
+		Aside,
 	},
 	data() {
 		return {
-			credentials:{}
+			credentials: {},
 		};
 	},
-	methods : {
-
-	},
+	methods: {},
 	async beforeCreate() {
 		this.$ipc.on('auth', (event, data) => {
 			this.credentials = data;

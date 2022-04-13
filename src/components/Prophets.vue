@@ -33,12 +33,9 @@
 </template>
 
 <script>
-// import lcu from '../tools/api/lcu';
+import client from '../tools/api/client';
 
 export default {
-	props : {
-		credentials : Object
-	},
 	data() {
 		return {
 			tableData: [
@@ -92,14 +89,10 @@ export default {
 						{ name: '1/10/2', type: 'danger' },
 					],
 				},
-			]
+			],
+			Client:{},
+			credentials:{}
 		};
-	},
-	watch: {
-		credentials: function (val) {
-			this.credentials = val;// 接收父组件的值
-			console.log('credentials1: ', this.credentials);
-		},
 	},
 	methods: {
 		// 查询
@@ -125,6 +118,12 @@ export default {
 				}
 			}
 		}
+	},
+	async beforeCreate() {
+		this.$ipc.on('auth', (event, data) => {
+			this.credentials = data;
+			this.Client = new client(this.credentials);
+		});
 	},
 	async created() {
 		

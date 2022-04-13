@@ -4,14 +4,12 @@ import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import LocalFile from './tools/api/LocalFile'
-import { request, connect, authenticate } from 'league-connect'
+import { authenticate } from 'league-connect'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-let credentials = {
-    port: 10008,
-    password: '123456'
-};
+let credentials = {};        
 
-// app.commandLine.appendSwitch('ignore-certificate-errors')
+//忽略证书错误
+app.commandLine.appendSwitch('ignore-certificate-errors')
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
     { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -21,7 +19,7 @@ async function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time))
 }
 
-async function listenCredentials(){
+async function listenCredentials() {
     let t1 = new Date().getTime()
     credentials = await authenticate({ awaitConnection: true });
     console.log(new Date().getTime() - t1)
@@ -55,20 +53,22 @@ async function createWindow() {
         },
     );
 
-    win.webContents.session.webRequest.onHeadersReceived(filter,(details, callback) => {
-        details.responseHeaders['Access-Control-Allow-Origin'] = '*',
-        details.responseHeaders['Access-Control-Allow-Headers'] = '*',
-        callback({
-            responseHeaders: {
-                ...details.responseHeaders,
-            },
-        });
+    win.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
+        //解决跨域问题 修改返回头
+        details.responseHeaders['access-control-allow-headers'] = ['*'],
+            details.responseHeaders['access-control-allow-methods'] = ['*'],
+            details.responseHeaders['access-control-allow-origin'] = ['*'],
+            callback({
+                responseHeaders: {
+                    ...details.responseHeaders,
+                },
+            });
     });
     listenCredentials();
     let webContents = win.webContents;
     webContents.on('did-finish-load', () => {
         console.log('did-finish-load')
-        if(Object.keys(credentials).length>0){
+        if (Object.keys(credentials).length > 0) {
             webContents.send('auth', credentials);
         }
     })

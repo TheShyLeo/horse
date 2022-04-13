@@ -1,7 +1,7 @@
 <template>
 	<el-aside width="200px" class="Aside">
 		<div class="lv-left-head">
-			<img :src="user.icon" alt="icon" width="42" height="42" style="border-radius: 50%; vertical-align: middle; margin: 10px 50px" />
+			<img :src="user.icon" alt="icon" width="52" height="52" style="border-radius: 50%; vertical-align: middle; margin: 10px 50px" />
 			<div class="lv-left-head-name">
 				<span>{{ user.name }}</span>
 				<span>{{ user.rank }}</span>
@@ -32,44 +32,40 @@
 <script>
 import client from '../tools/api/client';
 export default {
-	props: {
-		credentials: Object,
-	},
 	data() {
 		return {
 			user: {
 				name: '喜乐难寻',
 				rank: 'Lv.1',
-				icon: '../assets/123.png'
+				icon: 'http://ddragon.leagueoflegends.com/cdn/12.7.1/img/profileicon/3456.png',
 			},
+			Client: {},
+			credentials: {},
 		};
 	},
 	methods: {
 		handleSelect(index) {
 			this.$router.push('/' + index);
 		},
-		getCurrentSummoner(){
-			let data ={};
-			if(data){
-				this.name = data.displayName;
-				this.rank = data.summonerLevel;
-				this.icon = data.profileIconId;
+		async getCurrentSummoner() {
+			let data = await this.Client.getCurrentSummoner();
+			if (data) {
+				this.user.name = data.displayName;
+				this.user.rank = 'Lv.'+ data.summonerLevel;
+				this.user.icon = `http://ddragon.leagueoflegends.com/cdn/12.7.1/img/profileicon/${data.profileIconId}.png`;
 			}
-		}
+		},
 	},
-	watch: {
-		credentials: async function (val) {
-			this.credentials = val;// 接收父组件的值
-			console.log('credentials watch: ', this.credentials);
-			let Client = new client(this.credentials);
-			let c = await Client.getCur();
-			console.log('c: ', c);
-		}
-	},
-	created() {
-	},
+	created() {},
 	mounted() {
 		console.log('credentials mounted: ', this.credentials);
+	},
+	async beforeCreate() {
+		this.$ipc.on('auth', (event, data) => {
+			this.credentials = data;
+			this.Client = new client(this.credentials);
+			this.getCurrentSummoner();
+		});
 	},
 	name: 'Aside',
 };
