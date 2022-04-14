@@ -168,7 +168,7 @@ export default class client {
     }
     async acceptGame() {
         console.log("接受对局")
-        let response = await requestHttp2({
+        await requestHttp2({
             method: 'POST',
             url: '/lol-matchmaking/v1/ready-check/accept'
         })

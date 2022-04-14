@@ -59,49 +59,54 @@ export default {
 						{ name: '1/10/2', type: 'danger' },
 					],
 				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
-				{
-					name: '王小虎',
-					kda: '10.2',
-					percent: '50%',
-					history: [
-						{ name: '10/0/12', type: 'success' },
-						{ name: '1/10/2', type: 'danger' },
-						{ name: '1/10/2', type: 'danger' },
-					],
-				},
 			],
-			Client:{},
-			credentials:{}
+			Client: client,
+			credentials: {},
 		};
 	},
 	methods: {
+		async getTeamSummoners() {
+			console.log('获取队伍信息');
+			let conversation = await this.Client.getCurConversation();
+			if (conversation.length > 0) {
+				let conversationId = conversation[0].id;
+				let messages = await this.Client.getConversationMessages(conversationId);
+				for (const v of messages) {
+					let matchlist = await this.Client.getMatchList(v.fromSummonerId, 0, 10);
+					if (matchlist.length > 0) {
+						let match = await this.Client.getMatch(matchlist[0].gameId);
+						let participants = match.participants;
+						let team = participants.filter(v => v.teamId === 100);
+						let teamSummoners = team.map(v => v.summonerId);
+						let teamInfo = await this.Client.getSummonerInfo(teamSummoners);
+						let teamName = teamInfo.map(v => v.name);
+						let teamKDA = teamInfo.map(v => v.stats.kda);
+						let teamPercent = teamInfo.map(v => v.stats.winPercent);
+						let teamHistory = teamInfo.map(v => v.stats.history);
+						let teamData = {
+							name: teamName.join('、'),
+							kda: teamKDA.join('、'),
+							percent: teamPercent.join('、'),
+							history: teamHistory.map(v => v.map(v => {
+								return {
+									name: v.name,
+									type: v.type,
+								};
+							})),
+						};
+						this.tableData.push(teamData);
+					}
+				}
+			}
+			return [];
+		},
 		// 查询
 		search() {
-			let data ;
+			let data;
 			let arr = [];
-			if(data){
-				if(data.games && data.games.games && data.games.games.length > 0){
-					data.games.games.forEach(item => {
+			if (data) {
+				if (data.games && data.games.games && data.games.games.length > 0) {
+					data.games.games.forEach((item) => {
 						let match = {};
 						let participants = item.participants;
 						let stats = participants.stats;
@@ -117,7 +122,7 @@ export default {
 					});
 				}
 			}
-		}
+		},
 	},
 	async beforeCreate() {
 		this.$ipc.on('auth', (event, data) => {
@@ -125,9 +130,7 @@ export default {
 			this.Client = new client(this.credentials);
 		});
 	},
-	async created() {
-		
-	},
+	async created() {},
 	name: 'Prophet',
 };
 </script>
